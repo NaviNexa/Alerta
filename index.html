@@ -344,6 +344,114 @@
       body{padding-top:0}
     }
 
+  
+    /* ===== AlertaYa v2: panel rápido ===== */
+    .quick-near-grid{
+      display:grid;
+      gap:9px;
+      margin-top:12px;
+    }
+    .quick-card{
+      border:1px solid var(--line);
+      border-radius:19px;
+      padding:11px;
+      display:grid;
+      grid-template-columns:46px minmax(0,1fr) auto;
+      gap:10px;
+      align-items:center;
+      background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      min-width:0;
+    }
+    .quick-card.guard{
+      border-color:rgba(49,233,129,.30);
+      background:linear-gradient(145deg,rgba(49,233,129,.11),rgba(255,255,255,.025));
+    }
+    .quick-icon{
+      width:46px;height:46px;border-radius:15px;
+      display:grid;place-items:center;
+      background:rgba(47,134,255,.14);
+      color:#89bcff;font-size:22px;font-weight:950;
+    }
+    .quick-card.pharmacy .quick-icon{
+      background:rgba(49,233,129,.24);
+      color:#72f6ae;
+      border:1px solid rgba(49,233,129,.28);
+    }
+    .quick-card.guard .quick-icon{
+      color:#062d18;background:#49f498;
+      box-shadow:0 0 10px rgba(49,233,129,.95),0 0 27px rgba(49,233,129,.58);
+      animation:pulse 1.9s ease-in-out infinite;
+    }
+    .quick-info{min-width:0}
+    .quick-kicker{
+      font-size:9px;font-weight:950;letter-spacing:.35px;
+      color:#8998ae;text-transform:uppercase;margin-bottom:3px;
+    }
+    .quick-card.guard .quick-kicker{color:#62f3a5}
+    .quick-name{
+      font-size:13px;font-weight:900;line-height:1.15;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .quick-meta{
+      margin-top:4px;font-size:9.5px;color:var(--muted);
+      line-height:1.35;overflow-wrap:anywhere;
+    }
+    .quick-distance{color:#fff;font-weight:900}
+    .quick-warning{color:#e0b96c;font-weight:850}
+    .quick-actions{display:flex;gap:6px;align-items:center}
+    .quick-call,.quick-waze{
+      min-width:38px;height:38px;border-radius:12px;
+      border:0;display:grid;place-items:center;
+      font-weight:950;font-size:10px;
+    }
+    .quick-call{
+      background:rgba(49,233,129,.14);color:#72f6ae;
+      border:1px solid rgba(49,233,129,.22);
+    }
+    .quick-call.disabled{opacity:.34;pointer-events:none}
+    .quick-waze{background:#69e9ff;color:#07111f;padding:0 8px}
+    .near-more-btn{
+      width:100%;border:1px solid var(--line);border-radius:14px;
+      padding:11px;margin-top:10px;background:rgba(255,255,255,.055);
+      color:#dce6f5;font-size:10.5px;font-weight:900;cursor:pointer;
+      display:none;
+    }
+    .near-all-wrap{display:none;margin-top:4px}
+    .near-all-wrap.open{display:block}
+    .quick-placeholder{
+      border:1px dashed var(--line);border-radius:17px;
+      padding:14px;text-align:center;color:var(--muted);
+      font-size:10.5px;line-height:1.45;
+    }
+    .floating-sos{
+      position:fixed;
+      z-index:50;
+      right:max(14px,calc((100vw - 430px)/2 + 14px));
+      bottom:calc(86px + env(safe-area-inset-bottom));
+      height:48px;min-width:76px;padding:0 14px;
+      border-radius:999px;
+      display:flex;align-items:center;justify-content:center;gap:7px;
+      background:linear-gradient(145deg,#ff4a40,#cb1f19);
+      color:#fff;border:2px solid rgba(255,255,255,.18);
+      box-shadow:0 12px 30px rgba(217,39,34,.45);
+      font-size:15px;font-weight:950;
+      text-decoration:none;
+    }
+    .floating-sos span{font-size:16px}
+    .floating-sos:active{transform:scale(.96)}
+    @media (max-width:375px){
+      .quick-card{
+        grid-template-columns:42px minmax(0,1fr);
+        align-items:start;
+      }
+      .quick-icon{width:42px;height:42px}
+      .quick-actions{grid-column:2;margin-top:2px}
+      .floating-sos{
+        height:44px;min-width:70px;
+        bottom:calc(82px + env(safe-area-inset-bottom));
+      }
+    }
+
   </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -389,32 +497,46 @@
   </section>
 
 
+
   <section class="section" id="cerca">
-    <div class="head"><h2>Cerca de mí</h2><small>Según tu GPS</small></div>
+    <div class="head"><h2>Cerca de mí</h2><small>Prioridad automática</small></div>
     <div class="nearbox">
       <div class="near-hero">
         <div class="near-hero-icon">⌖</div>
         <div>
-          <h3>Ayuda cercana según tu ubicación</h3>
-          <p>Localiza farmacias, hospitales, centros sanitarios, policía y bomberos y ábrelos directamente en Waze.</p>
+          <h3>Lo más importante, primero</h3>
+          <p>Con tu GPS, la app busca primero farmacia de guardia/24 h, urgencias, policía y bomberos.</p>
         </div>
       </div>
+
       <button class="near-main" id="nearBtn" onclick="findNearby()">Usar mi ubicación y buscar</button>
-      <a class="near-main" style="display:block;text-align:center;background:rgba(49,233,129,.12);color:#72f6ae;border:1px solid rgba(49,233,129,.22);margin-top:8px"
-         href="https://www.micof.es/ver/124/?buscarDireccion=&buscarGuardia=1"
-         target="_blank" rel="noopener">Ver guardias oficiales MICOF</a>
       <div class="near-status" id="nearStatus"></div>
-      <div class="near-filters" id="nearFilters">
-        <button class="near-chip active" data-kind="all" onclick="setNearFilter('all',this)">Todos</button>
-        <button class="near-chip" data-kind="pharmacy" onclick="setNearFilter('pharmacy',this)">✚ Farmacias</button>
-        <button class="near-chip" data-kind="health" onclick="setNearFilter('health',this)">Hospitales</button>
-        <button class="near-chip" data-kind="police" onclick="setNearFilter('police',this)">Policía</button>
-        <button class="near-chip" data-kind="fire" onclick="setNearFilter('fire',this)">Bomberos</button>
+
+      <div class="quick-near-grid" id="quickNearby" aria-live="polite">
+        <div class="quick-placeholder">Activa tu ubicación para ver los servicios prioritarios más cercanos.</div>
       </div>
-      <div class="near-results" id="nearResults"></div>
+
+      <button class="near-more-btn" id="showAllBtn" onclick="toggleAllNearby()">Ver todos los lugares cercanos</button>
+
+      <div class="near-all-wrap" id="nearAllWrap">
+        <div class="near-filters" id="nearFilters">
+          <button class="near-chip active" data-kind="all" onclick="setNearFilter('all',this)">Todos</button>
+          <button class="near-chip" data-kind="pharmacy" onclick="setNearFilter('pharmacy',this)">✚ Farmacias</button>
+          <button class="near-chip" data-kind="health" onclick="setNearFilter('health',this)">Hospitales</button>
+          <button class="near-chip" data-kind="police" onclick="setNearFilter('police',this)">Policía</button>
+          <button class="near-chip" data-kind="fire" onclick="setNearFilter('fire',this)">Bomberos</button>
+        </div>
+        <div class="near-results" id="nearResults"></div>
+      </div>
+
+      <a class="near-main"
+         style="display:block;text-align:center;background:rgba(49,233,129,.12);color:#72f6ae;border:1px solid rgba(49,233,129,.22);margin-top:9px"
+         href="https://www.micof.es/ver/124/?buscarDireccion=&buscarGuardia=1"
+         target="_blank" rel="noopener">Comprobar guardias oficiales MICOF</a>
     </div>
-    <div class="source">Los recursos cercanos se consultan al pulsar el botón. La distancia es aproximada y se calcula desde el GPS del teléfono.</div>
+    <div class="source">La distancia se calcula desde el GPS. Una farmacia solo se marca con halo luminoso cuando está identificada como guardia/urgencias 24 h; si no, la app lo indica expresamente.</div>
   </section>
+
 
   <section class="section" id="telefonos">
     <div class="head"><h2>Teléfonos rápidos</h2><small>Toca para llamar</small></div>
@@ -461,6 +583,11 @@
 
   <p class="tip"><strong>Importante:</strong> si existe peligro inmediato, llama al 112. No retrases una llamada urgente buscando una ruta, una farmacia o tu ubicación en esta página.</p>
 </main>
+
+
+<a class="floating-sos" href="tel:112" aria-label="Llamar al 112">
+  <span>☎</span><b>112</b>
+</a>
 
 <div class="bottom">
   <nav class="nav">
@@ -758,6 +885,128 @@
     );
   }
 
+
+  function formatDistance(km){
+    return km < 1 ? `${Math.round(km*1000)} m` : `${km.toFixed(1)} km`;
+  }
+
+  function getQuickPhone(item){
+    if(!item) return '';
+    if(item.phone) return item.phone;
+    const guard = guardRecordFor(item);
+    return guard?.phone || '';
+  }
+
+  function nearestOf(kind, preferEmergency=false){
+    const items = nearbyItems.filter(x => x.kind === kind);
+    if(!items.length) return null;
+    if(preferEmergency){
+      const urgent = items.filter(x => x.emergency);
+      if(urgent.length) return urgent.sort((a,b)=>a.distance-b.distance)[0];
+    }
+    return items.sort((a,b)=>a.distance-b.distance)[0];
+  }
+
+  function priorityPharmacy(){
+    const items = nearbyItems.filter(x => x.kind === 'pharmacy');
+    if(!items.length) return null;
+
+    const guards = items.filter(x => isVerifiedGuard(x)).sort((a,b)=>a.distance-b.distance);
+    if(guards.length) return {item:guards[0], mode:'guard'};
+
+    const open24 = items.filter(x => x.openingHours === '24/7').sort((a,b)=>a.distance-b.distance);
+    if(open24.length) return {item:open24[0], mode:'24h'};
+
+    return {item:items.sort((a,b)=>a.distance-b.distance)[0], mode:'near'};
+  }
+
+  function quickCard(item, kind, options={}){
+    if(!item) return '';
+
+    const phone = getQuickPhone(item);
+    const icon = iconFor(kind);
+    const km = formatDistance(item.distance);
+    const isGuard = options.mode === 'guard';
+    const cardClass = [
+      'quick-card',
+      kind === 'pharmacy' ? 'pharmacy' : '',
+      isGuard ? 'guard' : ''
+    ].filter(Boolean).join(' ');
+
+    let kicker = labelFor(kind);
+    let subtitle = item.address || '';
+    let warning = '';
+
+    if(kind === 'pharmacy'){
+      if(options.mode === 'guard'){
+        kicker = 'Farmacia de guardia / 24 h';
+        warning = 'Guardia/urgencias identificada';
+      }else if(options.mode === '24h'){
+        kicker = 'Farmacia 24 h';
+        warning = 'Abierta 24 h según datos del mapa';
+      }else{
+        kicker = 'Farmacia más cercana';
+        warning = 'Guardia no verificada · comprueba MICOF';
+      }
+    }else if(kind === 'health'){
+      kicker = item.emergency ? 'Urgencias / hospital' : 'Centro sanitario';
+    }else if(kind === 'police'){
+      kicker = item.policeType || 'Dependencia policial';
+    }else if(kind === 'fire'){
+      kicker = 'Bomberos';
+    }
+
+    return `
+      <div class="${cardClass}">
+        <div class="quick-icon">${icon}</div>
+        <div class="quick-info">
+          <div class="quick-kicker">${escapeHtml(kicker)}</div>
+          <div class="quick-name">${escapeHtml(item.name)}</div>
+          <div class="quick-meta">
+            <span class="quick-distance">${km}</span>
+            ${warning ? ` · <span class="${options.mode === 'near' ? 'quick-warning' : ''}">${escapeHtml(warning)}</span>` : ''}
+            ${subtitle ? `<br>${escapeHtml(subtitle)}` : ''}
+          </div>
+        </div>
+        <div class="quick-actions">
+          ${phone
+            ? `<a class="quick-call" href="tel:${phoneHref(phone)}" aria-label="Llamar a ${escapeHtml(item.name)}">☎</a>`
+            : `<span class="quick-call disabled" title="Teléfono no disponible">☎</span>`}
+          <button class="quick-waze" onclick="wazeCoords(${item.lat},${item.lon})">WAZE</button>
+        </div>
+      </div>`;
+  }
+
+  function renderQuickNearby(){
+    const box = document.getElementById('quickNearby');
+    if(!box) return;
+
+    const pharmacy = priorityPharmacy();
+    const health = nearestOf('health', true);
+    const police = nearestOf('police');
+    const fire = nearestOf('fire');
+
+    const cards = [
+      pharmacy ? quickCard(pharmacy.item,'pharmacy',{mode:pharmacy.mode}) : '',
+      health ? quickCard(health,'health') : '',
+      police ? quickCard(police,'police') : '',
+      fire ? quickCard(fire,'fire') : ''
+    ].filter(Boolean);
+
+    box.innerHTML = cards.length
+      ? cards.join('')
+      : '<div class="quick-placeholder">No se han encontrado servicios prioritarios en el radio consultado.</div>';
+  }
+
+  function toggleAllNearby(){
+    const wrap = document.getElementById('nearAllWrap');
+    const btn = document.getElementById('showAllBtn');
+    if(!wrap || !btn) return;
+    const open = wrap.classList.toggle('open');
+    btn.textContent = open ? 'Ocultar lista completa' : 'Ver todos los lugares cercanos';
+    if(open) renderNearby();
+  }
+
   function renderNearby(){
     const box = document.getElementById('nearResults');
     if(!box) return;
@@ -872,6 +1121,12 @@
         openingHours: tags.opening_hours || '',
         phone: tags.phone || tags['contact:phone'] || tags['contact:mobile'] || '',
         policeType: kind === 'police' ? policeTypeFor(tags) : '',
+        emergency: (
+          tags.amenity === 'hospital' ||
+          tags.healthcare === 'hospital' ||
+          tags.emergency === 'yes' ||
+          tags.emergency === 'emergency_ward'
+        ),
         distance: haversineKm(lat, lon, lat2, lon2)
       };
     }).filter(Boolean)
@@ -884,12 +1139,18 @@
     const status = document.getElementById('nearStatus');
     const filters = document.getElementById('nearFilters');
     const results = document.getElementById('nearResults');
+    const quick = document.getElementById('quickNearby');
+    const showAllBtn = document.getElementById('showAllBtn');
+    const allWrap = document.getElementById('nearAllWrap');
 
     status.style.display = 'block';
     btn.disabled = true;
     btn.textContent = 'Buscando cerca de ti…';
     status.textContent = 'Solicitando permiso de ubicación al iPhone…';
     results.innerHTML = '';
+    if(quick) quick.innerHTML = '<div class="quick-placeholder">Buscando servicios prioritarios cerca de ti…</div>';
+    if(showAllBtn) showAllBtn.style.display = 'none';
+    if(allWrap) allWrap.classList.remove('open');
 
     if(!navigator.geolocation){
       status.textContent = 'Este navegador no permite acceder a la ubicación.';
@@ -911,27 +1172,37 @@
         await loadNearby(lat, lon);
         filters.style.display = 'flex';
         status.textContent = nearbyItems.length
-          ? `Encontrados ${nearbyItems.length} recursos. Las farmacias de guardia/urgencias 24 h aparecen primero; el resto se ordena por distancia.`
+          ? `Encontrados ${nearbyItems.length} recursos. Arriba tienes los prioritarios; puedes abrir la lista completa cuando quieras.`
           : 'No se han encontrado recursos en el radio consultado.';
+        renderQuickNearby();
         renderNearby();
+        if(showAllBtn && nearbyItems.length) showAllBtn.style.display = 'block';
       }catch(err){
         filters.style.display = 'none';
-        status.innerHTML = 'No se pudo cargar la lista automática en este momento. Puedes abrir búsquedas cercanas directamente en Waze.';
-        results.innerHTML = `
-          <div class="near-card is-pharmacy">
-            <div class="near-icon">✚</div>
-            <div class="near-info"><div class="near-name">Farmacias cerca de mí</div><div class="near-meta">Buscar alrededor de tu ubicación</div></div>
-            <div class="near-actions">
-              <span class="near-call disabled" title="Selecciona una farmacia para llamar">☎</span>
-              <button class="near-waze" onclick="openWaze('farmacia')">WAZE</button>
+        status.innerHTML = 'No se pudo cargar la lista automática en este momento. Puedes usar estos accesos directos.';
+        if(quick) quick.innerHTML = `
+          <div class="quick-card pharmacy">
+            <div class="quick-icon">✚</div>
+            <div class="quick-info">
+              <div class="quick-kicker">Farmacias</div>
+              <div class="quick-name">Buscar farmacias cercanas</div>
+              <div class="quick-meta">Comprueba la guardia en MICOF</div>
+            </div>
+            <div class="quick-actions">
+              <span class="quick-call disabled">☎</span>
+              <button class="quick-waze" onclick="openWaze('farmacia')">WAZE</button>
             </div>
           </div>
-          <div class="near-card">
-            <div class="near-icon">H</div>
-            <div class="near-info"><div class="near-name">Urgencias cerca de mí</div><div class="near-meta">Hospitales y centros sanitarios</div></div>
-            <div class="near-actions">
-              <a class="near-call" href="tel:112" aria-label="Llamar al 112">☎</a>
-              <button class="near-waze" onclick="openWaze('urgencias hospital')">WAZE</button>
+          <div class="quick-card">
+            <div class="quick-icon">H</div>
+            <div class="quick-info">
+              <div class="quick-kicker">Urgencias</div>
+              <div class="quick-name">Buscar hospital / urgencias</div>
+              <div class="quick-meta">El 112 permanece visible para emergencias</div>
+            </div>
+            <div class="quick-actions">
+              <a class="quick-call" href="tel:112">☎</a>
+              <button class="quick-waze" onclick="openWaze('urgencias hospital')">WAZE</button>
             </div>
           </div>`;
       }finally{
@@ -942,11 +1213,25 @@
       status.textContent = err.code === 1
         ? 'No se ha permitido usar la ubicación. En iPhone: Ajustes → Privacidad y seguridad → Localización → Safari.'
         : 'No se pudo obtener la ubicación. Comprueba que la localización esté activada e inténtalo de nuevo.';
+      if(quick) quick.innerHTML = '<div class="quick-placeholder">Activa la ubicación para ver los servicios prioritarios más cercanos.</div>';
       btn.disabled = false;
       btn.textContent = 'Intentar de nuevo';
     }, {enableHighAccuracy:true, timeout:12000, maximumAge:30000});
   }
 
+
+  // Si el usuario ya concedió ubicación anteriormente, actualiza el panel al abrir la app
+  // sin volver a mostrar una solicitud de permiso.
+  window.addEventListener('DOMContentLoaded', async () => {
+    try{
+      if(navigator.permissions && navigator.permissions.query){
+        const permission = await navigator.permissions.query({name:'geolocation'});
+        if(permission.state === 'granted'){
+          setTimeout(() => findNearby(), 350);
+        }
+      }
+    }catch(e){}
+  });
 
   renderPharmacies();
 </script>
