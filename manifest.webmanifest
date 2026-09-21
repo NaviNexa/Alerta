@@ -1,7 +1,7 @@
 {
   "name": "AlertaYa · Emergencias",
   "short_name": "AlertaYa",
-  "description": "Emergencias, ubicación, farmacias y ayuda cercana.",
+  "description": "Emergencias, ubicación, ICE, farmacias, urgencias y ayuda cercana.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -21,5 +21,9 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "categories": [
+    "medical",
+    "utilities"
   ]
 }
